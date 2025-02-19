@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Member Area</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <!-- navbar || logged in user -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/assets/logo.svg" width="30" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/books.html">All Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mybooks.html">My Borrowed Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html">Contact</a>
+                </li>
+            </ul>
+            <div class="ml-auto">
+                <a href="profile.html" class="btn btn-outline-primary mr-2 ml-auto" type="button">My Profile</a>
+                <button class="btn btn-outline-danger mr-2 ml-auto" type="button" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="mt-5 mb-4">My Borrowed Books</h2>
+        <a href="mybooks.html" class="btn btn-outline-primary">View All</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="borrowedBookList">
+                <td colspan="4" class="text-center">Loading...</td>
+            </tbody>
+        </table>
+        <div id="borrowedPaginationContainer" class="d-flex justify-content-center mt-3"></div>
+    </div>
+
+    <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="responseModalLabel">Return Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    
+                </div>
+                <div class="modal-footer" id="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmReturnBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="mt-5 mb-4">My Returned Books</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="returnedBookList">
+                <td colspan="4" class="text-center">Loading...</td>
+            </tbody>
+        </table>
+        <div id="returnedPaginationContainer" class="d-flex justify-content-center mt-3"></div>
+    </div>
+
+
+    <div class="modal fade" id="readBookModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookTitle">Book title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="bookBody">
+              <p>Book PDF will display here</p>
+            </div>
+            <div class="modal-footer" id="bookButton">
+              <button type="button" class="btn btn-warning" data-dismiss="modal">Close Book</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <footer class="footer mt-5 pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <p class="text-center">Copyright &copy; <span id="currentYear"></span> Library. All rights reserved.</p>
+            </div>
+            <div class="row justify-content-center">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/script.js"></script>
+
+    <script>
+
+        checkForAuth('member');
+
+        const borrowedBookList = document.getElementById('borrowedBookList');
+        const borrowedPaginationContainer = document.getElementById('borrowedPaginationContainer');
+        const returnedBookList = document.getElementById('returnedBookList');
+        const returnedPaginationContainer = document.getElementById('returnedPaginationContainer');
+
+        let currentPageBorrowed = 1;
+        let currentPageReturned = 1;
+        const limit = 10;
+
+        function fetchBorrowedBooks(page = 1) {
+            const token = localStorage.getItem('token');
+
+            fetch(`http://localhost:8080/api/account/borrowed?page=${page}&limit=${limit}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const books = data.data.mybooks;
+                    const pagination = data.data.pagination;
+
+                    borrowedBookList.innerHTML = '';
+
+                    if (books.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4" class="text-center">No borrowed books available.</td>`;
+                        borrowedBookList.appendChild(row);
+                    } else {
+                        books.forEach((book) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${book.title}</td>
+                                <td>${book.author}</td>
+                                <td>${book.genre}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="readBook('${book.bookLink}')">Read</button>
+                                    <button class="btn btn-danger btn-sm" onclick="returnBook('${book._id}')">Return</button>
+                                </td>
+                            `;
+                            borrowedBookList.appendChild(row);
+                        });
+                        showPagination(borrowedPaginationContainer, pagination, 'borrowed');
+                    }
+                })
+                .catch(error => console.error('Error in borrowed :', error));
+        }
+
+        function fetchReturnedBooks(page = 1) {
+            const token = localStorage.getItem('token');
+
+            fetch(`http://localhost:8080/api/account/history?page=${page}&limit=${limit}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const books = data.data.book;
+                    const pagination = data.data.pagination;
+
+                    returnedBookList.innerHTML = '';
+
+                    if (books.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4" class="text-center">No returned books available.</td>`;
+                        returnedBookList.appendChild(row);
+                    } else {
+                        books.forEach((book) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${book.title}</td>
+                                <td>${book.author}</td>
+                                <td>${book.genre}</td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" href="/view.html?book=${book.slug}">View Book</button>
+                                </td>
+                            `;
+                            returnedBookList.appendChild(row);
+                        });
+                        showPagination(returnedPaginationContainer, pagination, 'returned');
+                    }
+                })
+                .catch(error => console.error('Error in hitory books:', error));
+        }
+
+        function showPagination(paginationContainer, pagination, type) {
+            paginationContainer.innerHTML = '';
+            const { currentPage, totalPages } = pagination;
+
+            if (currentPage > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.classList.add('btn', 'btn-secondary');
+                prevButton.innerText = 'Previous';
+                prevButton.onclick = () => changePage(currentPage - 1, type);
+                paginationContainer.appendChild(prevButton);
+            }
+
+            const pageInfo = document.createElement('span');
+            pageInfo.classList.add('mx-2');
+            pageInfo.innerText = `Page ${currentPage} of ${totalPages}`;
+            paginationContainer.appendChild(pageInfo);
+
+            if (currentPage < totalPages) {
+                const nextButton = document.createElement('button');
+                nextButton.classList.add('btn', 'btn-secondary');
+                nextButton.innerText = 'Next';
+                nextButton.onclick = () => changePage(currentPage + 1, type);
+                paginationContainer.appendChild(nextButton);
+            }
+        }
+
+        function changePage(page, type) {
+            if (type === 'borrowed') {
+                currentPageBorrowed = page;
+                fetchBorrowedBooks(currentPageBorrowed);
+            } else {
+                currentPageReturned = page;
+                fetchReturnedBooks(currentPageReturned);
+            }
+        }
+
+        
+        function returnBook(bookId) {
+            const modalBody = document.getElementById("modalBody");
+            const confirmReturnBtn = document.getElementById("confirmReturnBtn");
+
+            modalBody.innerHTML = `<p class="text-danger">Are you sure you want to return the book?</p>`;
+            $('#responseModal').modal('show');
+
+            confirmReturnBtn.onclick = function () {
+                fetch(`${serverBaseUrl}/account/return/${bookId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        $('#responseModal').modal('hide');
+                        // console.log(data);
+                        // modalBody.innerHTML = data.message;
+                        // document.getElementById('modal-footer').innerHTML = `<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>`
+                        fetchBorrowedBooks(currentPageBorrowed);
+                        fetchReturnedBooks(currentPageReturned);
+                    })
+                    .catch(error => {
+                        console.error('Error returning book:', error);
+                        alert('Error returning book. Please try again.');
+                        $('#responseModal').modal('hide');
+                    });
+            };
+        }
+
+
+        function readBook(url){
+            const bookTitle = document.getElementById('bookTitle');
+            const bookBody = document.getElementById('bookBody');
+            const bookButton = document.getElementById('bookButton');
+            bookTitle.innerHTML = "Book Reader"
+            bookBody.innerHTML = `<embed src="${url}" type="application/pdf" width="100%" height="600px">`
+            $('#readBookModal').modal('show');
+        }
+
+        fetchBorrowedBooks(currentPageBorrowed);
+        fetchReturnedBooks(currentPageReturned);
+
+    </script>
+
+
+</body>
+
+</html>

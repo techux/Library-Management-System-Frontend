@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Member | Librarian Area</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <!-- nav bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/assets/logo.svg" width="30" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/books.html">All Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="books.html">Manage Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="members.html">Manage Members</a>
+                </li>
+            </ul>
+            <div class="ml-auto">
+                <!-- <a href="profile.html" class="btn btn-outline-primary mr-2 ml-auto" type="button">My Profile</a> -->
+                <button class="btn btn-outline-danger mr-2 ml-auto" type="button" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- tabular data with action button to edit book details -->
+    <div class="container">
+        <h1 class="text-center">Manage books</h1>
+
+        <!-- add new book button -->
+        <div class="text-center mt-4 mb-4">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBookModal">
+                Add New Book
+            </button>
+        </div>
+
+        <!-- Add new book form -->
+        <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addBookForm">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Book Title</label>
+                                <input type="text" class="form-control" id="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="4" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Author</label>
+                                <input type="text" class="form-control" id="author" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="genre" class="form-label">Genre</label>
+                                <input type="text" class="form-control" id="genre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="thumbnail" class="form-label">Upload Cover Image</label>
+                                <input type="file" class="form-control" id="thumbnail" accept="image/*" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookPdf" class="form-label">Upload Book PDF</label>
+                                <input type="file" class="form-control" id="bookPdf" accept=".pdf" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Book</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <hr>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="bookList">
+            </tbody>
+        </table>
+
+        <!-- Edit Book Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editBookForm">
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Book Title</label>
+                                <input type="text" class="form-control" id="editTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="editDescription" rows="4"
+                                    placeholder="Enter book description" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editAuthor" class="form-label">Author</label>
+                                <input type="text" class="form-control" id="editAuthor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editGenre" class="form-label">Genre</label>
+                                <input type="text" class="form-control" id="editGenre" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noticeTitle">Notice title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="noticeBody">
+                    <p>Notification text</p>
+                </div>
+                <div class="modal-footer" id="noticeButton">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmReturnBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer simple sa -->
+
+    <script src="/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/script.js"></script>
+
+    <script>
+        checkForAuth('librarian');
+
+        function renderBooks() {
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = '';
+
+            fetch(`${backendUrl}/books`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const books = data.data.books;
+
+                    if (books.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4" class="text-center">No borrowed books available.</td>`;
+                        borrowedBooksTableBody.appendChild(row);
+                    } else {
+                        books.forEach((book, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.genre}</td>
+                            <td>${book.description.substring(0, 50) + "..."}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editBook('${book._id}')">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteBook('${book._id}')">Delete</button>
+                            </td>
+                            `;
+                            bookList.appendChild(row);
+                        })
+                    }
+                });
+        }
+
+        function editBook(bookId) {
+            fetch(`${backendUrl}/books/id/${bookId}`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const book = data.data;
+
+                    document.getElementById('editTitle').value = book.title;
+                    document.getElementById('editDescription').value = book.description;
+                    document.getElementById('editAuthor').value = book.author;
+                    document.getElementById('editGenre').value = book.genre;
+
+                    $('#editModal').modal('show');
+
+                    const editBookForm = document.getElementById('editBookForm');
+                    editBookForm.onsubmit = function (e) {
+                        e.preventDefault();
+
+                        const updatedBook = {
+                            title: document.getElementById('editTitle').value,
+                            description: document.getElementById('editDescription').value,
+                            author: document.getElementById('editAuthor').value,
+                            genre: document.getElementById('editGenre').value
+                        };
+
+                        fetch(`${backendUrl}/admin/book/${bookId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify(updatedBook)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "ok") {
+                                    $('#editModal').modal('hide');
+                                    renderBooks();
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating book:', error);
+                                alert('Error updating book');
+                            });
+                    };
+                })
+                .catch(error => {
+                    console.error('Error fetching book details:', error);
+                    alert('Error fetching book details');
+                });
+        }
+
+        function deleteBook(bookId) {
+            const noticeTitle = document.getElementById('noticeTitle');
+            const noticeBody = document.getElementById('noticeBody');
+            const confirmReturnBtn = document.getElementById('confirmReturnBtn');
+
+            noticeTitle.innerHTML = "Are you sure to delete the book ?"
+            noticeBody.innerHTML = "Confirm to delete the book, the book will remove from Readers bookshelf too";
+
+            $('#noticeModal').modal('show')
+
+            confirmReturnBtn.onclick = function () {
+                fetch(`${backendUrl}/admin/book/${bookId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "ok") {
+                            renderBooks();
+                            $('#noticeModal').modal('hide');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error: ' + error);
+                    });
+            };
+        }
+
+        function addBook() {
+            // Get form field values
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const author = document.getElementById('author').value;
+            const genre = document.getElementById('genre').value;
+            const bookPdf = document.getElementById('bookPdf').files[0];
+            const thumbnail = document.getElementById('thumbnail').files[0];
+
+            // Create a new FormData object
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('author', author);
+            formData.append('genre', genre);
+            formData.append('bookPdf', bookPdf);
+            formData.append('thumbnail', thumbnail);
+
+            // Get token from localStorage for authentication
+            const token = localStorage.getItem('token');
+
+            // Send data to backend using fetch
+            fetch(`${backendUrl}/admin/book`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "ok") {
+                        // Book added successfully, close modal and reload books
+                        $('#addBookModal').modal('hide');
+                        // After the modal is hidden, remove the backdrop
+                        $('#addBookModal').on('hidden.bs.modal', function () {
+                            $('.modal-backdrop').remove();
+                        });
+
+                        renderBooks();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding book:', error);
+                    alert('Error adding book');
+                });
+        }
+
+        // Listen for form submission
+        document.getElementById('addBookForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            addBook(); // Call the function to add the book
+        });
+
+
+        renderBooks();
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Member | Librarian Area</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <!-- nav bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/assets/logo.svg" width="30" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/books.html">All Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="books.html">Manage Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="members.html">Manage Members</a>
+                </li>
+            </ul>
+            <div class="ml-auto">
+                <!-- <a href="profile.html" class="btn btn-outline-primary mr-2 ml-auto" type="button">My Profile</a> -->
+                <button class="btn btn-outline-danger mr-2 ml-auto" type="button" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- tabular data with action button to edit book details -->
+    <div class="container">
+        <h1 class="text-center">Manage Members</h1>
+
+        <!-- add new book button -->
+        <div class="text-center mt-4 mb-4">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+                Add New Member
+            </button>
+        </div>
+
+        <!-- Add new book form -->
+        <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">Add New Member</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addUserForm">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="mName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="mUsername" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="mEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="genre" class="form-label">Password</label>
+                                <input type="text" class="form-control" id="mPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select class="form-control" id="mRole">
+                                    <option value="member">Member</option>
+                                    <option value="librarian">Librarian</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Member</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <hr>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userList">
+            </tbody>
+        </table>
+
+
+        <!-- Edit Book Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Member</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editUserForm">
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Username</label>
+                                <textarea class="form-control" id="editUsername" rows="4"
+                                    placeholder="Enter book description" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editAuthor" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="editEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editGenre" class="form-label">Password</label>
+                                <input type="text" class="form-control" id="editPassword">
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select class="form-control" id="editRole">
+                                    <option value="member">Member</option>
+                                    <option value="librarian">Librarian</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noticeTitle">Notice title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="noticeBody">
+                    <p>Notification text</p>
+                </div>
+                <div class="modal-footer" id="noticeButton">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmReturnBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer simple sa -->
+
+    <script src="/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/script.js"></script>
+
+    <script>
+        checkForAuth('librarian');
+
+        function renderUsers() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+
+            fetch(`${backendUrl}/admin/members`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const users = data.data;
+
+                    if (users.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4" class="text-center">No borrowed books available.</td>`;
+                        borrowedBooksTableBody.appendChild(row);
+                    } else {
+                        users.forEach((user, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                            <td>${user.name}</td>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.role}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editUser('${user._id}')">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteUser('${user._id}')">Delete</button>
+                            </td>
+                            `;
+                            userList.appendChild(row);
+                        })
+                    }
+                });
+        }
+
+        function editUser(userId) {
+            fetch(`${backendUrl}/admin/member/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const user = data.data;
+
+                    document.getElementById('editName').value = user.name;
+                    document.getElementById('editUsername').value = user.username;
+                    document.getElementById('editEmail').value = user.email;
+                    document.getElementById('editRole').value = user.role;
+
+                    $('#editModal').modal('show');
+
+                    const editUserForm = document.getElementById('editUserForm');
+                    editUserForm.onsubmit = function (e) {
+                        e.preventDefault();
+
+                        const updatedUser = {
+                            name: document.getElementById('editName').value,
+                            email: document.getElementById('editUsername').value,
+                            username: document.getElementById('editEmail').value,
+                            password: document.getElementById('editPassword').value,
+                            role: document.getElementById('editRole').value
+                        };
+
+                        fetch(`${backendUrl}/admin/member/${userId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify(updatedUser)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "ok") {
+                                    $('#editModal').modal('hide');
+                                    renderUsers();
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating member:', error);
+                                alert('Error updating member');
+                            });
+                    };
+                })
+                .catch(error => {
+                    console.error('Error fetching member details:', error);
+                    alert('Error fetching member details');
+                });
+        }
+
+        function deleteUser(userId) {
+            const noticeTitle = document.getElementById('noticeTitle');
+            const noticeBody = document.getElementById('noticeBody');
+            const confirmReturnBtn = document.getElementById('confirmReturnBtn');
+
+            noticeTitle.innerHTML = "Are you sure to delete the Member ?"
+            noticeBody.innerHTML = "Confirm to delete the Member ?";
+
+            $('#noticeModal').modal('show')
+
+            confirmReturnBtn.onclick = function () {
+                fetch(`${backendUrl}/admin/member/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "ok") {
+                            renderUsers();
+                            $('#noticeModal').modal('hide');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error: ' + error);
+                    });
+            };
+        }
+
+        function addUser() {
+            const name = document.getElementById("mName").value;
+            const email = document.getElementById("mEmail").value;
+            const username = document.getElementById("mUsername").value;
+            const password = document.getElementById("mPassword").value;
+            const role = document.getElementById("mRole").value;
+
+            const data = {
+                name: name,
+                email: email,
+                username: username,
+                password: password,
+                role: role
+            };
+
+            fetch(`${backendUrl}/admin/member`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "ok") {
+                        $('#addUserModal').modal('hide');
+                        $('#addUserModal').on('hidden.bs.modal', function () {
+                            $('.modal-backdrop').remove();
+                        });
+                        renderUsers();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding book:', error);
+                    alert('Error adding book');
+                });
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            addUser();
+        });
+
+
+        renderUsers();
+    </script>
+
+
+
+</body>
+
+</html>
