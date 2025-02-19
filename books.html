@@ -95,7 +95,7 @@
         }
 
         function loadBooks() {
-            fetch('http://localhost:8080/api/books', {
+            fetch(`${backendUrl}/books`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

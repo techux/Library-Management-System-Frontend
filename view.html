@@ -159,7 +159,7 @@
             }
             
             function fetchBook(){
-                fetch("http://localhost:8080/api/books/" + book)
+                fetch(`${backendUrl}/books/${book}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -209,7 +209,7 @@
                     return;
                 }
 
-                fetch(`${serverBaseUrl}/account/borrow/${bookId}`,{
+                fetch(`${backendUrl}/account/borrow/${bookId}`,{
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

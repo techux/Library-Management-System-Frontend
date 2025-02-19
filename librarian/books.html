@@ -9,7 +9,6 @@
 </head>
 
 <body>
-    <!-- nav bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">
             <img src="/assets/logo.svg" width="30" height="30" alt="">
@@ -40,18 +39,15 @@
         </div>
     </nav>
 
-    <!-- tabular data with action button to edit book details -->
     <div class="container">
         <h1 class="text-center">Manage books</h1>
 
-        <!-- add new book button -->
         <div class="text-center mt-4 mb-4">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBookModal">
                 Add New Book
             </button>
         </div>
 
-        <!-- Add new book form -->
         <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -109,7 +105,6 @@
             </tbody>
         </table>
 
-        <!-- Edit Book Modal -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -298,7 +293,6 @@
         }
 
         function addBook() {
-            // Get form field values
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
             const author = document.getElementById('author').value;
@@ -306,7 +300,6 @@
             const bookPdf = document.getElementById('bookPdf').files[0];
             const thumbnail = document.getElementById('thumbnail').files[0];
 
-            // Create a new FormData object
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
@@ -315,10 +308,8 @@
             formData.append('bookPdf', bookPdf);
             formData.append('thumbnail', thumbnail);
 
-            // Get token from localStorage for authentication
             const token = localStorage.getItem('token');
 
-            // Send data to backend using fetch
             fetch(`${backendUrl}/admin/book`, {
                 method: 'POST',
                 headers: {
@@ -329,9 +320,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "ok") {
-                        // Book added successfully, close modal and reload books
                         $('#addBookModal').modal('hide');
-                        // After the modal is hidden, remove the backdrop
                         $('#addBookModal').on('hidden.bs.modal', function () {
                             $('.modal-backdrop').remove();
                         });
@@ -347,10 +336,9 @@
                 });
         }
 
-        // Listen for form submission
         document.getElementById('addBookForm').addEventListener('submit', function (e) {
-            e.preventDefault(); // Prevent the default form submission
-            addBook(); // Call the function to add the book
+            e.preventDefault(); 
+            addBook(); 
         });
 
 

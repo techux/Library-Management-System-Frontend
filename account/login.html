@@ -136,7 +136,7 @@
                 password: password
             };
 
-            fetch("http://localhost:8080/api/auth/login", {
+            fetch(`${backendUrl}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

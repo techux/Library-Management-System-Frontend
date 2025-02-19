@@ -163,7 +163,7 @@
         function fetchBorrowedBooks(page = 1) {
             const token = localStorage.getItem('token');
 
-            fetch(`http://localhost:8080/api/account/borrowed?page=${page}&limit=${limit}`, {
+            fetch(`${backendUrl}/account/borrowed?page=${page}&limit=${limit}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -204,7 +204,7 @@
         function fetchReturnedBooks(page = 1) {
             const token = localStorage.getItem('token');
 
-            fetch(`http://localhost:8080/api/account/history?page=${page}&limit=${limit}`, {
+            fetch(`${backendUrl}/account/history?page=${page}&limit=${limit}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -286,7 +286,7 @@
             $('#responseModal').modal('show');
 
             confirmReturnBtn.onclick = function () {
-                fetch(`${serverBaseUrl}/account/return/${bookId}`, {
+                fetch(`${backendUrl}/account/return/${bookId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

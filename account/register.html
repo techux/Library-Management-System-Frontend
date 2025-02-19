@@ -157,7 +157,7 @@
                 role: role
             };
 
-            fetch("http://localhost:8080/api/auth/register", {
+            fetch(`${backendUrl}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

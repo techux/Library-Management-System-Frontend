@@ -211,7 +211,7 @@
         function fetchProfile() {
             const token = localStorage.getItem('token');
 
-            fetch('http://localhost:8080/api/account/profile', {
+            fetch(`${backendUrl}/account/profile`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -237,7 +237,7 @@
                 username: usernameField.value
             };
 
-            fetch('http://localhost:8080/api/account/update', {
+            fetch(`${backendUrl}/account/update`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -265,7 +265,7 @@
                 newPassword: newPasswordField.value
             };
 
-            fetch('http://localhost:8080/api/auth/change-password', {
+            fetch(`${backendUrl}/auth/change-password`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -295,7 +295,7 @@
 
             confirmReturnBtn.onclick = function () {
                 const token = localStorage.getItem('token');
-                fetch('http://localhost:8080/api/account/', {
+                fetch(`${backendUrl}/account/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
